@@ -18,7 +18,7 @@ export default function Header({ active }: NavBarProps) {
     <nav className="flex justify-between items-center bg-stone-800 p-6">
       <Image src="/listA.png" alt="Logo" width={100} height={100} />
 
-      <ul className="flex gap-4">
+      <ul className="flex gap-20">
         {links.map((link) => (
           <li key={link.text} className={active === link.text ? activeClass : ""}>
             <Link href={link.href}>{link.text}</Link>
