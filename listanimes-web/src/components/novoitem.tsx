@@ -3,7 +3,7 @@
 import { createAnime } from "@/actions/animes-actions";
 import { useState } from "react";
 import { FaPlus } from "react-icons/fa";
-
+import { useRouter } from "next/navigation";
 
 const initialState = {
     values: {
@@ -23,6 +23,7 @@ const initialState = {
 export default function NovoItem() {
     const [isOpen, setIsOpen] = useState(false);
     const [formData, setFormData] = useState(initialState);
+    const router = useRouter(); 
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, type, checked } = e.target;
@@ -54,6 +55,7 @@ export default function NovoItem() {
         } else {
             setIsOpen(false);
             alert("Anime criado com sucesso!");
+            router.refresh(); 
         }
     };
 

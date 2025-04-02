@@ -17,7 +17,7 @@ export default async function AnimesPage() {
       <main className="flex gap-16 justify-center items-center p-20">
         <div className="flex flex-col gap-10 bg-stone-200 p-16 w-300 rounded-xl justify-center items-center">
           <div className="flex items-center gap-10 justify-between">
-            <h1 className={`${inter.className} text-3xl font-black text-stone-800`}>SUA LISTA</h1>
+            <h1 className={` text-4xl font-black text-stone-800`}>SUA LISTA</h1>
             <NovoItem/>
           </div>
           {data.length == 0 ?
