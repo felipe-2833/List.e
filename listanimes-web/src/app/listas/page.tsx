@@ -1,10 +1,14 @@
+import { getAnimes } from "@/actions/animes-actions";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
+import ListItem from "@/components/listitem";
 import NovoItem from "@/components/novoitem";
 import Sugestoes from "@/components/sugestoes";
 import { inter } from "@/styles/fonts";
 
-export default function Home() {
+export default async function AnimesPage() {
+  const data: Anime[] = await getAnimes()
+
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -16,11 +20,14 @@ export default function Home() {
             <h1 className={`${inter.className} text-3xl font-black text-stone-800`}>SUA LISTA</h1>
             <NovoItem/>
           </div>
-          <p className={`${inter.className} text-xl font-bold text-stone-800`}>lista a ser implementada...</p>
+          {data.length == 0 ?
+                      <p className={`${inter.className} text-xl font-bold text-stone-800`}>lista a ser implementada...</p> :
+                        data.map(anime => <ListItem key={anime.id} anime={anime} />)
+                    }
         </div>
         <Sugestoes/>
       </main>
       <Footer />
     </div>
-  );
+  )
 }

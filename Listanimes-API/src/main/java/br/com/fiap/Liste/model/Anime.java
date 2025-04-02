@@ -19,17 +19,19 @@ public class Anime {
     @NotBlank(message = "campo obrigatório")
     private String name;
 
-    @NotBlank(message = "campo obrigatório")
-    private String icon;
+    // //@NotBlank(message = "campo obrigatório")
+    // // private String icon;
 
     @DecimalMin(value = "0.0", inclusive = true, message = "O valor deve ser maior ou igual a 0")
     @DecimalMax(value = "10.0", inclusive = true, message = "O valor deve ser menor ou igual a 10")
     private Double nota;
 
-    @NotBlank(message = "campo obrigatório")
-    private String descricao;
+    // @NotBlank(message = "campo obrigatório")
+    // private String descricao;
 
     @NotBlank(message = "campo obrigatório")
-    private String opiniao;
+    private String genero;
+
+    private Boolean completo;
 
 }
