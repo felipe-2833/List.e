@@ -19,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import br.com.fiap.Liste.model.Anime;
 import br.com.fiap.Liste.repository.AnimeRepository;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/animes")
@@ -37,7 +38,7 @@ public class AnimeController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Anime create(@RequestBody Anime anime) {
+    public Anime create(@RequestBody @Valid Anime anime) {
         log.info("Cadastrando animes " + anime.getName());
         return repository.save(anime);
     }
@@ -56,7 +57,7 @@ public class AnimeController {
     }
 
     @PutMapping("/{id}")
-    public Anime update(@PathVariable Long id, @RequestBody Anime anime) {
+    public Anime update(@PathVariable Long id, @RequestBody @Valid Anime anime) {
         log.info("Atualizando ifos anime " + id + " " + anime);
         getAnime(id);
         anime.setId(id);
