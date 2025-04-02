@@ -1,5 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import { FaBell } from "react-icons/fa";
+import Notificacoes from "./notificacoes";
 
 interface NavBarProps {
   active: "HOME" | "DESCUBRA" | "LISTAS";
@@ -25,13 +27,17 @@ export default function Header({ active }: NavBarProps) {
           </li>
         ))}
       </ul>
-      <Image
-        className="size-12 rounded-full"
-        src="/foto_samir.png"
-        alt="Avatar"
-        width={48}
-        height={48}
-      />
+      <div className="flex justify-center items-center gap-8">
+
+        <Notificacoes/>
+        <Image
+          className="size-12 rounded-full"
+          src="/foto_samir.png"
+          alt="Avatar"
+          width={48}
+          height={48}
+        />
+        </div>
     </nav>
   );
 }
