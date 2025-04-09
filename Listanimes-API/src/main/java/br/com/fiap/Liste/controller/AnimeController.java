@@ -47,19 +47,21 @@ public class AnimeController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(responses = {
             @ApiResponse(responseCode = "400", description = "Falha na validação")
-    })
+    }, tags = "animes", summary = "Adicionar anime", description = "Adicionar animes")
     public Anime create(@RequestBody @Valid Anime anime) {
         log.info("Cadastrando animes " + anime.getName());
         return repository.save(anime);
     }
 
     @GetMapping("/{id}")
+    @Operation(description = "Listar anime pelo id", tags = "animes", summary = "Listar de anime")
     public Anime get(@PathVariable Long id) {
         log.info("Buscando anime " + id);
         return getAnime(id);
     }
 
     @DeleteMapping("/{id}")
+    @Operation(description = "Deletar anime pelo id", tags = "animes", summary = "Deletar anime")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void destroy(@PathVariable Long id) {
         log.info("Apagando anime " + id);
@@ -67,6 +69,7 @@ public class AnimeController {
     }
 
     @PutMapping("/{id}")
+    @Operation(description = "Update anime pelo id", tags = "animes", summary = "Update anime")
     public Anime update(@PathVariable Long id, @RequestBody @Valid Anime anime) {
         log.info("Atualizando ifos anime " + id + " " + anime);
         getAnime(id);
