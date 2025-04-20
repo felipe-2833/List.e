@@ -1,12 +1,17 @@
 package br.com.fiap.Liste.controller;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.ExampleMatcher.StringMatcher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,15 +26,18 @@ import org.springframework.web.server.ResponseStatusException;
 
 import br.com.fiap.Liste.model.Anime;
 import br.com.fiap.Liste.repository.AnimeRepository;
+import br.com.fiap.Liste.specification.AnimeSpecification;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/animes")
+@Slf4j
 public class AnimeController {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    public record AnimeFilter(String name, String genero, Double nota, Boolean completo){}
 
     @Autowired
     private AnimeRepository repository;
@@ -37,9 +45,10 @@ public class AnimeController {
     @GetMapping
     @Cacheable("animes")
     @Operation(description = "Listar todos os animes", tags = "animes", summary = "Lista de animes")
-    public List<Anime> index() {
-        log.info("Buscando todos os animes");
-        return repository.findAll();
+    public Page<Anime> index(AnimeFilter filter, @PageableDefault(size = 2, sort = "name", direction = Direction.DESC) Pageable pageable) {
+        log.info("Buscando animes com filtro ", filter.name(), filter.genero(), filter.nota(), filter.completo());
+        var specification = AnimeSpecification.withFilters(filter);
+        return repository.findAll(specification, pageable);
     }
 
     @PostMapping
