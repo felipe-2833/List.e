@@ -1,16 +1,11 @@
 package br.com.fiap.Liste.controller;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.domain.ExampleMatcher.StringMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,7 +32,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AnimeController {
 
-    public record AnimeFilter(String name, String genero, Double nota, Boolean completo){}
+    public record AnimeFilter(String name, String genero, Double nota, Boolean completo) {
+    }
 
     @Autowired
     private AnimeRepository repository;
@@ -45,7 +41,8 @@ public class AnimeController {
     @GetMapping
     @Cacheable("animes")
     @Operation(description = "Listar todos os animes", tags = "animes", summary = "Lista de animes")
-    public Page<Anime> index(AnimeFilter filter, @PageableDefault(size = 2, sort = "name", direction = Direction.DESC) Pageable pageable) {
+    public Page<Anime> index(AnimeFilter filter,
+            @PageableDefault(size = 2, sort = "name", direction = Direction.DESC) Pageable pageable) {
         log.info("Buscando animes com filtro ", filter.name(), filter.genero(), filter.nota(), filter.completo());
         var specification = AnimeSpecification.withFilters(filter);
         return repository.findAll(specification, pageable);
