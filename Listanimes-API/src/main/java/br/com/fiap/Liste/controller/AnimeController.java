@@ -42,9 +42,9 @@ public class AnimeController {
     @Cacheable("animes")
     @Operation(description = "Listar todos os animes", tags = "animes", summary = "Lista de animes")
     public Page<Anime> index(AnimeFilter filter,
-            @PageableDefault(size = 2, sort = "name", direction = Direction.DESC) Pageable pageable) {
+            @PageableDefault(size = 5, sort = "name", direction = Direction.DESC) Pageable pageable, @AuthenticationPrincipal User user) {
         log.info("Buscando animes com filtro ", filter.name(), filter.genero(), filter.nota(), filter.completo());
-        var specification = AnimeSpecification.withFilters(filter);
+        var specification = AnimeSpecification.withFilters(filter, user);
         return repository.findAll(specification, pageable);
     }
 
@@ -54,33 +54,43 @@ public class AnimeController {
     @Operation(responses = {
             @ApiResponse(responseCode = "400", description = "Falha na validação")
     }, tags = "animes", summary = "Adicionar anime", description = "Adicionar animes")
-    public Anime create(@RequestBody @Valid Anime anime) {
+    public Anime create(@RequestBody @Valid Anime anime, @AuthenticationPrincipal User user) {
         log.info("Cadastrando animes " + anime.getName());
+        anime.setUser(user);
         return repository.save(anime);
     }
 
     @GetMapping("/{id}")
     @Operation(description = "Listar anime pelo id", tags = "animes", summary = "Listar de anime")
-    public Anime get(@PathVariable Long id) {
+    public Anime get(@PathVariable Long id, @AuthenticationPrincipal User user) {
         log.info("Buscando anime " + id);
+        checkPermission(id, user);
         return getAnime(id);
     }
 
     @DeleteMapping("/{id}")
     @Operation(description = "Deletar anime pelo id", tags = "animes", summary = "Deletar anime")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void destroy(@PathVariable Long id) {
+    public void destroy(@PathVariable Long id, @AuthenticationPrincipal User user) {
         log.info("Apagando anime " + id);
+        checkPermission(id, user);
         repository.delete(getAnime(id));
     }
 
     @PutMapping("/{id}")
     @Operation(description = "Update anime pelo id", tags = "animes", summary = "Update anime")
-    public Anime update(@PathVariable Long id, @RequestBody @Valid Anime anime) {
+    public Anime update(@PathVariable Long id, @RequestBody @Valid Anime anime, @AuthenticationPrincipal User user) {
         log.info("Atualizando ifos anime " + id + " " + anime);
-        getAnime(id);
+        checkPermission(id, user);
         anime.setId(id);
+        anime.setUser(user);
         return repository.save(anime);
+    }
+
+    private void checkPermission(Long id, User user) {
+        var animeOld = getAnime(id);
+        if(!animeOld.getUser().equals(user)) 
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
     }
 
     private Anime getAnime(Long id) {

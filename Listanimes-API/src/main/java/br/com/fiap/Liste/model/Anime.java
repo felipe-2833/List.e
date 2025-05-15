@@ -1,9 +1,12 @@
 package br.com.fiap.Liste.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
@@ -39,5 +42,9 @@ public class Anime {
     private String genero;
 
     private Boolean completo;
+
+    @ManyToOne
+    @JsonIgnore
+    private User user;
 
 }

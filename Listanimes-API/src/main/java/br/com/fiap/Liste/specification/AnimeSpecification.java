@@ -10,7 +10,7 @@ import br.com.fiap.Liste.model.Anime;
 import jakarta.persistence.criteria.Predicate;
 
 public class AnimeSpecification {
-    public static Specification<Anime> withFilters(AnimeFilter filter) {
+    public static Specification<Anime> withFilters(AnimeFilter filter, User user) {
         return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
 
@@ -33,6 +33,8 @@ public class AnimeSpecification {
             if (filter.completo() != null) {
                 predicates.add(cb.equal(root.get("completo"), filter.completo()));
             }
+
+            predicates.add(cb.equal(root.get("user"), user));
 
             return cb.and(predicates.toArray(new Predicate[0]));
         };

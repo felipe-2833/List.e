@@ -11,11 +11,20 @@ import com.auth0.jwt.algorithms.Algorithm;
 import br.com.fiap.Liste.model.Token;
 import br.com.fiap.Liste.model.User;
 import br.com.fiap.Liste.model.UserRole;
+import jakarta.annotation.PostConstruct;
 
 @Service
 public class TokenService {
-    private final Long DURATION = 10L; // 10 minutes
-    private final Algorithm ALG = Algorithm.HMAC256("secret");
+    private final Long DURATION = 120L; // 10 minutes
+    private Algorithm ALG;
+
+    @Value("${jwt.secret}")
+    private String secret;
+
+    @PostConstruct
+    public void init(){
+        ALG = Algorithm.HMAC256(secret);
+    }
 
     public Token createToken(User user){
         var token = JWT.create()
@@ -37,7 +46,7 @@ public class TokenService {
                     .builder()
                     .id(Long.parseLong( verifiedToken.getSubject() ))
                     .email(verifiedToken.getClaim("email").toString())
-                    .role(UserRole.valueOf(verifiedToken.getClaim("role").toString()))
+                    .role(UserRole.valueOf(verifiedToken.getClaim("role").asString()))
                     .build();
                                 
     }
